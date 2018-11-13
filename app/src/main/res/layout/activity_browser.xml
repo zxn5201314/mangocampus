@@ -1,0 +1,51 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    tools:context=".activity.BrowserActivity">
+    <!--导航栏-->
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <!--顶部导航栏-->
+        <!--app:layout_scrollFlags="scroll|enterAlways|snap"-->
+        <android.support.v7.widget.Toolbar
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            android:id="@+id/browser_toolbar_id"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_width="match_parent"
+            android:background="?attr/colorPrimary"
+            app:titleTextAppearance="@style/toolbar_title_size"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" >
+            <!--芒果校园-->
+            <TextView
+                android:layout_gravity="center"
+                android:text=""
+                android:textSize="20sp"
+                android:id="@+id/browser_tv_id"
+                android:maxLines="1"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+   <RelativeLayout
+       app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+        <android.support.design.widget.CoordinatorLayout
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:id="@+id/webview_frame_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+        </android.support.design.widget.CoordinatorLayout>
+    </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">粒子校园</string>
+    <string name="title_home">主页</string>
+    <string name="title_dashboard">发现</string>
+    <string name="title_notifications">我的</string>
+
+    <!--SpinnerArray-->
+    <string-array name="spinner_array">
+        <item>失物招领</item>
+        <item>寻物启事</item>
+        <item>求知问答</item>
+        <item>顺风拼车</item>
+        <item>晚安心语</item>
+        <item>转卖二手</item>
+    </string-array>
+</resources>

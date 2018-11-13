@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+    <!--保护导航栏不被遮挡-->
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <!--顶部导航栏-->
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/detail_toolbar_id"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:layout_width="match_parent"
+        app:layout_scrollFlags="scroll|enterAlways|snap"
+        android:minHeight="?attr/actionBarSize"
+        app:titleTextAppearance="@style/toolbar_title_size"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_gravity="center"
+            android:text="详细信息"
+            android:textSize="20sp"
+            android:maxLines="1"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+    <manggo.com.comment_module.AutoScrollView
+        android:id="@+id/scrool_linear_id"
+        android:layout_width="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="1000dp">
+            <!--标题-->
+            <TextView
+                android:textColor="@color/colorPrimary"
+                android:layout_width="wrap_content"
+                android:id="@+id/detail_title_id"
+                android:layout_marginTop="10dp"
+                android:textStyle="bold"
+                android:padding="10dp"
+                android:layout_gravity="center"
+                android:textSize="25sp"
+                android:layout_height="wrap_content" />
+            <!--内容-->
+            <TextView
+                android:layout_width="match_parent"
+                android:id="@+id/detail_content_id"
+                android:padding="15dp"
+                android:textIsSelectable="true"
+                android:textSize="19sp"
+                android:textColor="@color/content_color"
+                android:autoLink="phone"
+                android:layout_height="wrap_content" />
+            <!--图片布局-->
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/linear_image_id"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:text="到底啦"
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:textSize="20dp"
+                android:layout_marginBottom="150dp"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </manggo.com.comment_module.AutoScrollView>
+    <!--悬浮按钮-->
+    <android.support.design.widget.FloatingActionButton
+        android:src="@drawable/ic_create_black_30dp"
+        android:backgroundTint="@android:color/white"
+        android:id="@+id/detail_float_id"
+        android:tooltipText="写留言"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</android.support.design.widget.CoordinatorLayout>

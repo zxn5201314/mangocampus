@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <!--圆头像布局-->
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="30dp"
+            android:layout_margin="5dp"
+            android:layout_gravity="left|center"
+            android:id="@+id/user_photo_id"
+            android:src="@drawable/image1"
+            android:layout_height="30dp" />
+        <!--用户昵称-->
+        <TextView
+            android:textColor="@android:color/black"
+            android:text="上九天揽月"
+            android:id="@+id/user_nick_id"
+            android:layout_marginLeft="45dp"
+            android:layout_gravity="left|center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.jaren.lib.view.LikeView
+            android:id="@+id/like_view_id"
+            android:layout_gravity="right|center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cirRadius="10dp"
+            app:cycleTime="600"
+            app:defaultColor="#efefef"
+            app:checkedColor="#ff0066"/>
+
+    </FrameLayout>
+    <LinearLayout
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <!--评论内容-->
+        <TextView
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:id="@+id/comment_id"
+            android:text="\t\t\t\t不错不错不错不错不错不错不错不错不错不错不错不错不错不错不错不错"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</LinearLayout>
