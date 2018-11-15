@@ -30,16 +30,19 @@
             android:layout_height="wrap_content" />
     </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
-    <manggo.com.comment_module.AutoScrollView
+    <manggo.com.comment_module.AutoNestedScrollView
         android:id="@+id/scrool_linear_id"
         android:layout_width="match_parent"
+        android:scrollbars="vertical"
+        android:scrollbarStyle="outsideOverlay"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="1000dp">
+            android:id="@+id/detail_linear_id"
+            android:layout_height="wrap_content">
             <!--标题-->
             <TextView
                 android:textColor="@color/colorPrimary"
@@ -49,15 +52,37 @@
                 android:textStyle="bold"
                 android:padding="10dp"
                 android:layout_gravity="center"
-                android:textSize="25sp"
+                android:textSize="30sp"
                 android:layout_height="wrap_content" />
+            <!--绝对布局实现字数和时间的布局-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginRight="15dp"
+                android:layout_height="wrap_content">
+                <!--总的字数-->
+                <TextView
+                    android:layout_alignParentLeft="true"
+                    android:id="@+id/detail_tv_textnumber_id"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <!--发布时间-->
+                <TextView
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/detail_tv_writetime_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
             <!--内容-->
             <TextView
                 android:layout_width="match_parent"
                 android:id="@+id/detail_content_id"
                 android:padding="15dp"
                 android:textIsSelectable="true"
-                android:textSize="19sp"
+                android:textSize="20sp"
                 android:textColor="@color/content_color"
                 android:autoLink="phone"
                 android:layout_height="wrap_content" />
@@ -70,14 +95,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-
+            <View
+                android:background="@color/edit_back1"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"/>
+            <TextView
+                android:text="评论"
+                android:textSize="20sp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
             <TextView
-                android:text="到底啦"
+                android:text="------------- end -------------"
                 android:layout_marginTop="15dp"
                 android:layout_width="match_parent"
                 android:gravity="center"
@@ -85,16 +120,15 @@
                 android:layout_marginBottom="150dp"
                 android:layout_height="wrap_content" />
         </LinearLayout>
-    </manggo.com.comment_module.AutoScrollView>
+    </manggo.com.comment_module.AutoNestedScrollView>
     <!--悬浮按钮-->
     <android.support.design.widget.FloatingActionButton
         android:src="@drawable/ic_create_black_30dp"
         android:backgroundTint="@android:color/white"
         android:id="@+id/detail_float_id"
-        android:tooltipText="写留言"
+        android:tooltipText="写评论"
         android:layout_gravity="bottom|right"
         android:layout_margin="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
 </android.support.design.widget.CoordinatorLayout>

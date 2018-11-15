@@ -1,10 +1,15 @@
 package manggo.com.activity;
 
 import android.animation.ObjectAnimator;
+import android.app.ActivityOptions;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -42,14 +47,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import manggo.com.R;
+import manggo.com.comment_module.AutoNestedScrollView;
 import manggo.com.comment_module.Comment;
 import manggo.com.comment_module.CommentAdapter;
 import manggo.com.comment_module.DividerItemDecoration;
+import manggo.com.recycleradapter.Fruit;
+import manggo.com.util.SwitchAnim;
 
 import static manggo.com.server.ServerInfo.DOWN_PIC;
 
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener{
-    private Transition transition;
     private Toolbar toolbar;
     private ActionBar bar;//导航栏
     private Dialog dialog;
@@ -58,6 +65,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private ImageView[] imageViews;
     private LinearLayout linearLayout;
     private EditText editText;
+    private TextView numberText,writeTimeText;
     private Button button;
     private FloatingActionButton float_button;
     private RecyclerView recyclerView;
@@ -65,6 +73,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private Toast toast;
     private int j;//显示当前图片的索引
     private int i;//遍历的索引
+    private AutoNestedScrollView scrollView;
     //评论实体
     private List<Comment> mListComment=new ArrayList<>();
     @Override
@@ -73,25 +82,12 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         //请求获得动画
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         setContentView(R.layout.activity_detail);
-        animM();
+        SwitchAnim.switchAnimUtil(this,getWindow());
         showBar();
         inits();//初始化控件
         //得到数据显示在控件
         getData();
     }
-    /**
-     * 动画方法
-     */
-    private void animM(){
-        transition= TransitionInflater.from(this).inflateTransition(R.transition.explode);
-        //退出的动画
-        getWindow().setExitTransition(transition);
-        //进入的动画
-        getWindow().setEnterTransition(transition);
-        //再次进入的动画
-        getWindow().setReenterTransition(transition);
-    }
-
     /**
      * 显示ActionBar的方法
      */
@@ -136,7 +132,15 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
      */
     private void inits(){
         //初始化控件
+        //显示字数的控件
+        numberText=(TextView)findViewById(R.id.detail_tv_textnumber_id);
+        //显示时间的控件
+        writeTimeText=(TextView)findViewById(R.id.detail_tv_writetime_id);
+        //滚动视图
+        scrollView=(AutoNestedScrollView)findViewById(R.id.scrool_linear_id);
+        //标题控件
         title=(TextView)findViewById(R.id.detail_title_id);
+        //内容控件
         content=(TextView)findViewById(R.id.detail_content_id);
         //找到线性布局管理器
         linearLayout=(LinearLayout)findViewById(R.id.linear_image_id);
@@ -156,7 +160,9 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(this));
         toast=new Toast(this);
+        LinearLayout linearLayout=(LinearLayout)findViewById(R.id.detail_linear_id);
 
+        /*添加滚动监听*/
     }
     /**
      * 得到数据显示在控件
@@ -164,12 +170,16 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private void getData(){
         //布局参数
         ViewGroup.LayoutParams layoutParams=new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        Intent intent=getIntent();//得到信使
-        Bundle bundle=intent.getExtras();//得到数据
-        title.setText(bundle.getString("title"));
-        Log.e("携带的标题:",bundle.getString("title"));
-        content.setText("\t\t\t\t"+bundle.getString("content"));
-        ArrayList<String> imageList=bundle.getStringArrayList("imageList");
+        //获得传递的对象
+        Fruit fruit=(Fruit)getIntent().getSerializableExtra("fruit_data");
+        //设置标题
+        title.setText(fruit.getName());
+        //设置内容
+        content.setText("\t\t\t\t"+fruit.getContent());
+        //设置字数
+        numberText.setText("字数\t"+(fruit.getContent()+fruit.getName()).length());
+        writeTimeText.setText(fruit.getTime());
+        ArrayList<String> imageList=(ArrayList<String>) fruit.getImageList();
         Log.e("图片的集合:",""+imageList);
         imageViews=new ImageView[imageList.size()];//要实列化添加的图片视图
 
@@ -191,7 +201,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             imageViews[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(tent);//启动查看图片的Activity
+                    startActivity(tent, ActivityOptions.makeSceneTransitionAnimation(DetailActivity.this).toBundle());//启动查看图片的Activity
                 }
             });
             loadAnim(imageViews[i],i,imageList);
@@ -238,9 +248,12 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.detail_float_id:showDialog();break;
+            case R.id.detail_float_id:
+                showDialog();
+                break;
             case R.id.comment_button_id:
                 addComment();
+                handler.sendEmptyMessage(0x123);
                 break;
         }
     }
@@ -297,5 +310,34 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         lp.alpha=9f;
         window.setAttributes(lp);
         dialog.show();
+    }
+    /**
+     * 沉浸式状态栏
+     */
+    private void changeStatu(){
+        if(Build.VERSION.SDK_INT>=21){
+            View view=getWindow().getDecorView();
+            view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
+    }
+    /**
+     * 启动一个子线程滚动到底部
+     */
+    Handler handler=new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message message) {
+            if(message.what==0x123){
+                scrollView.fullScroll(AutoNestedScrollView.FOCUS_DOWN);
+            }
+            return true;
+        }
+    });
+    /**
+     * 保存当前状态
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 }

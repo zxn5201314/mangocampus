@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <litepal>
     <!--数据库中的表名称名称-->
-    <dbname value="recy_info"></dbname>
+    <dbname value="fruit"></dbname>
     <!--数据库版本-->
     <version value="1"></version>
     <!--映射所有的模型-->

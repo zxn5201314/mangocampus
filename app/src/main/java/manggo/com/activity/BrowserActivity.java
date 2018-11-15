@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +43,7 @@ import java.net.URL;
 import manggo.com.R;
 import manggo.com.c5core.X5WebView;
 import manggo.com.downloadutil.DownloadUtil;
+import manggo.com.util.SwitchAnim;
 
 
 public class BrowserActivity extends AppCompatActivity {
@@ -63,7 +65,11 @@ public class BrowserActivity extends AppCompatActivity {
 		getWindow().setFormat(PixelFormat.TRANSLUCENT);
 		Intent intent = getIntent();//获得信使携带的数据
 		getIntentData(intent);
+        //页面执行需要展示的动画
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
 		setContentView(R.layout.activity_browser);
+		//设置动画
+        SwitchAnim.switchAnimUtil(this,getWindow());
 		showBar();
 		viewParent = (ViewGroup) findViewById(R.id.webview_frame_id);//获得布局管理器
 		handler.sendEmptyMessageDelayed(MSG_INIT_UI, 10);//通知子线程更新UI

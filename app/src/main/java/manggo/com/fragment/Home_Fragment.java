@@ -1,6 +1,7 @@
 package manggo.com.fragment;
 
 import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -43,6 +44,7 @@ import manggo.com.query.Page;
 import manggo.com.query.ResponseResult;
 import manggo.com.recycleradapter.Fruit;
 import manggo.com.recycleradapter.FruitAdapter;
+import manggo.com.util.RemoveDuplicateUtil;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -52,7 +54,7 @@ import okhttp3.Response;
 import static manggo.com.server.ServerInfo.REQUEST_ADDR;
 
 public class Home_Fragment extends Fragment {
-    private FruitAdapter fruitAdapter;
+    public FruitAdapter fruitAdapter;
     private ArrayList<Fruit> fresh=new ArrayList<>();//刷新集合;//请求到的数据
     private  RecyclerView recyclerView;
     private LinearLayoutManager ll;
@@ -100,15 +102,6 @@ public class Home_Fragment extends Fragment {
                 startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
             }
         });
-
-//        //初始化的时候找到本地数据条数据到集合中
-//        List<Fruit> init_list=LitePal.findAll(Fruit.class);
-//        //进行集合反转
-//        Collections.reverse(init_list);
-//        Log.e("数据库里面的数据:",init_list+"");
-////        list.addAll(list.size(),init_list);
-
-
 
         recyclerView=(RecyclerView)view.findViewById(R.id.recyclerviewId);
          ll=new LinearLayoutManager(getContext());
@@ -211,19 +204,15 @@ public class Home_Fragment extends Fragment {
         for (Object obj:page.getRecords()){
             Map map=(Map)obj;//强制转换为集合
             Log.e("当前页面current:",page.getCurrent()+"");
-            System.out.print(map);
             //装图片集合的list
             if(map.get("imageList")!=null&& map.get("imageList") instanceof  List){
                 imageList=(List)map.get("imageList");//获得图片的集合
             for(Object object:imageList){
                 Map m=(Map)object;
                 imageUri.add(m.get("fileName").toString());
-//                Log.e("图片名称:",m.get("fileName")+"");
-
                 }
             }
-//            Log.e("图片集合:",""+imageUri);
-            fresh.add(new Fruit(map.get("id").toString(),map.get("title").toString(),map.get("content").toString(),imageUri,map.get("visitCount").toString(),map.get("timeStr").toString()));
+            fresh.add(new Fruit(map.get("id").toString(),map.get("title").toString(),map.get("content").toString(),map.get("qq").toString(),map.get("phone").toString(),imageUri,map.get("visitCount").toString(),map.get("writeTime").toString()));
         }
     }
 
@@ -250,7 +239,7 @@ public class Home_Fragment extends Fragment {
                        list.addAll(0,fresh);
                        //移除重复的元素
                         fresh.clear();
-                        removeDuplicateWithOrder(list);
+                        RemoveDuplicateUtil.removeDuplicateWithOrder(list);
                         Log.e("移除重复元素的集合长度list：",""+list.size());
                        //通知列表数据发生改变
                         fruitAdapter.notifyDataSetChanged();
@@ -331,8 +320,6 @@ public class Home_Fragment extends Fragment {
         for (Object obj:page.getRecords()){
             Map map=(Map)obj;//强制转换为集合
             Log.e("当前页面current:",page.getCurrent()+"");
-            System.out.print(map);
-            //            Log.e("key为:",s+"");
             Log.e("用户id为:",map.get("id")+"");
             Log.e("标题:",map.get("title").toString());
             Log.e("内容:",map.get("content").toString());
@@ -350,7 +337,7 @@ public class Home_Fragment extends Fragment {
                 }
             }
 //            Log.e("图片集合:",""+imageUri);
-            load.add(new Fruit(map.get("id").toString(),map.get("title").toString(),map.get("content").toString(),imageUri,map.get("visitCount").toString(),map.get("timeStr").toString()));
+            load.add(new Fruit(map.get("id").toString(),map.get("title").toString(),map.get("content").toString(),map.get("qq").toString(),map.get("phone").toString(),imageUri,map.get("visitCount").toString(),map.get("writeTime").toString()));
         }
         }else {
 //            smartRefreshLayout.finishLoadMore(false);//刷新失败，提示没有更多数据了
@@ -380,7 +367,7 @@ public class Home_Fragment extends Fragment {
                         //刷新的数据放在最前面
                         list.addAll(list.size(),load);
                         //移除重复的元素
-                        removeDuplicateWithOrder(list);
+                        RemoveDuplicateUtil.removeDuplicateWithOrder(list);
                         load.clear();
                         Log.e("移除重复元素的集合长度list：",""+list.size());
                         //通知列表数据发生改变
@@ -394,19 +381,4 @@ public class Home_Fragment extends Fragment {
 
         }).start();
     }
-    /**
-     * 移除重复元素
-     */
-    public void removeDuplicateWithOrder(List<Fruit> removelist) {
-        Set<Fruit> set = new HashSet<>();
-        List<Fruit> newList = new ArrayList<>();
-        for (Iterator<Fruit> iter = removelist.iterator(); iter.hasNext();) {
-            Object e = iter.next();
-            if (set.add((Fruit)e))
-                newList.add((Fruit)e);
-        }
-        removelist.clear();
-        removelist.addAll(newList);
-    }
-
 }

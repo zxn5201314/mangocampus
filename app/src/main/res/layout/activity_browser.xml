@@ -22,7 +22,7 @@
             app:titleTextAppearance="@style/toolbar_title_size"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" >
-            <!--芒果校园-->
+            <!--粒子校园-->
             <TextView
                 android:layout_gravity="center"
                 android:text=""

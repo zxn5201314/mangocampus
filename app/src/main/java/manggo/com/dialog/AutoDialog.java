@@ -22,17 +22,18 @@ public class AutoDialog {
     private RecyclerView recyclerView;//定义一个瀑布流
     private SchoolAdapter adapter;//定义一个TRecyclerView的适配器
     private List<School> listLive=new ArrayList<>();
-    public void showDialog(Context context,Dialog dialog,int dialogView){
+    public void showDialog(Context context,Dialog dialog,int dialogView,boolean flag){
 
         //初始化一个对话框
         dialog=new Dialog(context,R.style.BottomDialog1);
+        dialog.setCancelable(flag);//设置是否能点击外部取消
         //加载线性布局找到该视图
         LinearLayout root=(LinearLayout) LayoutInflater.from(context).inflate(dialogView,null);
 
         init(root);
         dialog.setContentView(root);//设置视图
         Window window=dialog.getWindow();
-        window.setGravity(Gravity.CENTER);//设置在底部显示
+        window.setGravity(Gravity.CENTER);//设置在中部显示
         //获得当前对话框的参数值n
         WindowManager.LayoutParams lp=window.getAttributes();
         //坐标x

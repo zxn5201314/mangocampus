@@ -6,12 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -34,17 +34,16 @@ import android.widget.Toast;
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import manggo.com.R;
 import manggo.com.fragment.Dis_Fragment;
 import manggo.com.fragment.Home_Fragment;
 import manggo.com.fragment.My_Fragment;
 import manggo.com.recycleradapter.Fruit;
+import manggo.com.util.RemoveDuplicateUtil;
+import manggo.com.util.SwitchAnim;
 
-import static android.view.View.GONE;
 import static manggo.com.fragment.Home_Fragment.list;
 import static manggo.com.fragment.Home_Fragment.preferences;
 public class MainActivity extends AppCompatActivity{
@@ -58,8 +57,6 @@ public class MainActivity extends AppCompatActivity{
     private NetworkChangeReceiver netChange;
     //成功连接到网络的标志
     private boolean netSucc;
-    //用于加载动画的类
-    private Transition transition;
     private  Toolbar bar;
     List<Fragment>   list_fragment=new ArrayList<>();;
     private int lastIndex;
@@ -78,9 +75,8 @@ public class MainActivity extends AppCompatActivity{
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         //调用视图
         setContentView(R.layout.activity_main);
-        //判断保存状态的方法
-
-        animM();//动画方法
+        //切换动画
+        SwitchAnim.switchAnimUtil(this,getWindow());
         inits();//进行数据初始化
         showBar();//添加ToolBar状态栏
         ActionBar bar=getSupportActionBar();
@@ -251,19 +247,6 @@ public class MainActivity extends AppCompatActivity{
         registerReceiver(netChange,intentFilter);
     }
 
-    /**
-     * 动画方法
-     */
-    private void animM(){
-        transition= TransitionInflater.from(this).inflateTransition(R.transition.explode);
-        //退出的动画
-        getWindow().setExitTransition(transition);
-        //进入的动画
-        getWindow().setEnterTransition(transition);
-        //再次进入的动画
-        getWindow().setReenterTransition(transition);
-    }
-
     /**不保存当前状态
      *
      * @param outState
@@ -273,38 +256,6 @@ public class MainActivity extends AppCompatActivity{
 //不保存当前状态
 //        super.onSaveInstanceState(outState);
     }
-
-    /**
-     * 从本地数据库取出信息
-     */
-//    @Override
-//    public void onStart(){
-//        //如果有数据库则调用查询出里面的前十条数据封装到集合,作为最新的数据
-//        List<Fruit> fruits= LitePal.findAll(Fruit.class);//找到前面十条数据库里面所有信息
-//        Log.e("当前集合我"+fruits,"");
-//        //把该数据添加到Fragment的集合前面
-//        list.addAll(0,fruits);
-//        for(Fruit f:fruits){
-//            Log.e("title===>",f.getName());
-//            Log.e("context===>",f.getContent());
-//            Log.e("imageList",f.getImageList()+"");
-//
-//        }
-//        super.onStart();
-//    }
-/**
- * 重写该Activity销毁的方法实现数据库清空
- */
-@Override
-    public void onDestroy(){
-    //初始化操作数据库的对象
-    SharedPreferences.Editor edit=preferences.edit();
-    //修改数据
-    edit.putInt("loadCount",0);
-    edit.commit();//提交修改数目
-    super.onDestroy();
-}
-
     /**
      * 按下两次退出程序的方法
      * @param keyCode
@@ -326,4 +277,84 @@ public class MainActivity extends AppCompatActivity{
 
         return super.onKeyDown(keyCode, event);
     }
+    /**
+     * 找到数据放入当前RecyclerView
+     */
+    private void cursonData(){
+        List<Fruit> initList=new ArrayList<>();
+//        按照时间升序查询
+        Cursor cursor=LitePal.findBySQL("SELECT*FROM fruit ORDER BY time DESC");
+        if(cursor.moveToFirst()){
+            do{
+                String id=cursor.getString(cursor.getColumnIndex("fruitid"));
+                String name=cursor.getString(cursor.getColumnIndex("name"));
+                String content=cursor.getString(cursor.getColumnIndex("content"));
+                String visitCount=cursor.getString(cursor.getColumnIndex("visitcount"));
+                String time=cursor.getString(cursor.getColumnIndex("time"));//上传时间
+                String imageNames=cursor.getString(cursor.getColumnIndex("imagenames"));//上传时间
+                String qq=cursor.getString(cursor.getColumnIndex("qq"));
+                String phone=cursor.getString(cursor.getColumnIndex("phone"));
+                initList.add(new Fruit(id,name,content,qq,phone,splitAddList(imageNames),visitCount,time));//添加到集合
+            }while (cursor.moveToNext());//移动到下一行
+        }
+        Log.e("initlist集合的长度:",initList.size()+"");
+        list.addAll(0,initList);//从数据库取出数据放到集合
+        RemoveDuplicateUtil.removeDuplicateWithOrder(list);//取出list重复的元素
+        cursor.close();//游标关闭防止内存泄漏
+    }
+
+    /**
+     * 分割字符串添加到对象
+     */
+    private List<String> splitAddList(String string){//返回一个封装图片名称的集合
+        List<String>  imageList=new ArrayList<>();
+        String subSs=string.substring(string.indexOf("[")+1,string.indexOf("]"));
+        Log.e("截取后的字符串:",subSs);
+        String[] ss=subSs.split(",");
+        for(String s:ss){
+            String s1=s.trim();//去除左右空格
+            imageList.add(s1);
+        }
+        return imageList;
+
+    }
+
+    /**
+     * 数据添加到list集合
+     */
+    @Override
+    protected void onStart() {
+        //初始化数据库
+        LitePal.getDatabase();
+        cursonData();
+        super.onStart();
+    }
+    /**
+     * 重写该Activity销毁的方法实现数据库清空
+     */
+    @Override
+    public void onDestroy(){
+        //初始化操作数据库的对象
+        SharedPreferences.Editor edit=preferences.edit();
+        //修改数据
+        edit.putInt("loadCount",0);
+        edit.commit();//提交修改数目
+
+        //获得list（list定义在Home_Fragment里面）集合里面的所有元素保存到本地数据库
+        //进行数据保存到数据库
+        for(Fruit fruit:list){
+            fruit.setFruitId(fruit.getFruitId());//添加id
+            fruit.setName(fruit.getName());//添加标题名称
+            fruit.setContent(fruit.getContent());//添加内容
+            fruit.setVisitCount(fruit.getVisitCount());//添加参观量
+            fruit.setTime(fruit.getTime());//添加发布时间
+            fruit.setImageNames(fruit.getImageList().toString());//把集合储存
+            fruit.setQq(fruit.getQq());//保存QQ
+            fruit.setPhone(fruit.getPhone());//保存电话
+            fruit.save();
+            Log.e("数据保存成功","");
+        }
+        super.onDestroy();
+    }
+
 }

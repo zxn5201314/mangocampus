@@ -64,12 +64,14 @@ import java.util.Date;
 import java.util.List;
 
 import manggo.com.R;
+import manggo.com.dialog.AutoIssueDialog;
 import manggo.com.http.OkHttpUtil;
 import manggo.com.http.ProgressListener;
 import manggo.com.recycleradapter.ChooseImage;
 import manggo.com.recycleradapter.ChooseImageAdapter;
 import manggo.com.server.ServerInfo;
 import manggo.com.util.Issue_Info;
+import manggo.com.util.SwitchAnim;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -124,18 +126,9 @@ public class IssueActvity extends AppCompatActivity implements View.OnClickListe
         showBar();
         initData();//对数据进行初始化
         //执行动画的方法
-        changeAnim();
+        SwitchAnim.switchAnimUtil(this,getWindow());
         //添加图片的方法
         recyclerAddImage();
-    }
-    /**
-     * 进行动画的方法
-     */
-    private void changeAnim(){
-        transition= TransitionInflater.from(this).inflateTransition(R.transition.explode);
-        getWindow().setEnterTransition(transition);
-        getWindow().setExitTransition(transition);
-        getWindow().setReenterTransition(transition);
     }
     /**
      * 对数据进行初始化
@@ -313,27 +306,7 @@ public class IssueActvity extends AppCompatActivity implements View.OnClickListe
      * 提示用户框
      */
     private void tipUser(){
-        View v=getLayoutInflater().inflate(R.layout.dialog_view,null);
-        //实列化一个对话框
-        AlertDialog.Builder dialog=new AlertDialog.Builder(IssueActvity.this);
-        dialog.setView(R.layout.dialog_view);
-        dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                //不做任何处理
-                //该Activy结束
-                finish();
-            }
-        });
-        dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-              //不做任何处理
-            }
-        });
-
-        dialog.create();
-        dialog.show();
+        new AutoIssueDialog().showDialog(this,dialog,R.layout.ok_and_cancel_dialog_view,false);
     }
     /**
      * 返回键按下的方法

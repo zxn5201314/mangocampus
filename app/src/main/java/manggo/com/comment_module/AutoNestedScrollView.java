@@ -1,11 +1,12 @@
 package manggo.com.comment_module;
 
 import android.content.Context;
+import android.support.v4.widget.NestedScrollView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
-import android.widget.ScrollView;
-public class AutoScrollView extends ScrollView {
+
+public class AutoNestedScrollView extends NestedScrollView {
 
     private int downX;
     private int downY;
@@ -13,17 +14,17 @@ public class AutoScrollView extends ScrollView {
 
     private ScrollViewListener scrollViewListener = null;
 
-    public AutoScrollView(Context context) {
+    public AutoNestedScrollView(Context context) {
         super(context);
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();//
     }
 
-    public AutoScrollView(Context context, AttributeSet attrs) {
+    public AutoNestedScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();//
     }
 
-    public AutoScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public AutoNestedScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();//
     }
@@ -42,7 +43,7 @@ public class AutoScrollView extends ScrollView {
 
     public interface ScrollViewListener {
 
-        void onScrollChanged(AutoScrollView scrollView, int x, int y, int oldx, int oldy);
+        void onScrollChanged(AutoNestedScrollView scrollView, int x, int y, int oldx, int oldy);
 
     }
 

@@ -10,11 +10,13 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import manggo.com.R;
+import manggo.com.util.SwitchAnim;
 
 /**
  * 搜索Activity
@@ -27,7 +29,11 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //页面执行需要展示的动画
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         setContentView(R.layout.activity_search);
+        //动画
+        SwitchAnim.switchAnimUtil(this,getWindow());
         showBar();//显示该导航栏
         init();//初始化控件
 

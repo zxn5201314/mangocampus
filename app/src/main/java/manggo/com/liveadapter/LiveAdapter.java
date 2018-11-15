@@ -1,5 +1,7 @@
 package manggo.com.liveadapter;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -66,7 +68,7 @@ public class LiveAdapter extends RecyclerView.Adapter<LiveAdapter.ViewHolder> {
                         startWebActivity(view.getContext(),"http://ldsh.gznu.edu.cn/dsh/waphome","报修中心");
                         break;
                     case 4:
-                        new AutoDialog().showDialog(view.getContext(),dialog,R.layout.school_dialog);
+                        new AutoDialog().showDialog(view.getContext(),dialog,R.layout.school_dialog,true);
                         break;
 
                 }
@@ -94,6 +96,6 @@ public class LiveAdapter extends RecyclerView.Adapter<LiveAdapter.ViewHolder> {
         Intent intent=new Intent(context,BrowserActivity.class);
         intent.putExtra("EAS",uri);
         intent.putExtra("title",title);
-        context.startActivity(intent);
+        context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation((Activity) context).toBundle());
     }
 }

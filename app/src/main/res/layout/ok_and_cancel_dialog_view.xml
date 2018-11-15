@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginTop="20dp"
+    android:background="@drawable/shape_dialog_radius"
+    android:layout_marginRight="20dp"
+    android:layout_marginLeft="20dp"
+    android:paddingTop="10dp">
+
+
+    <RelativeLayout
+        android:id="@+id/ui_dialog_parent_rl"
+        android:layout_width="match_parent"
+        android:layout_height="206dp"
+        android:background="@drawable/shape_dialog_radius">
+        <!--内容-->
+        <TextView
+            android:id="@+id/dialog_content_tv_id"
+            android:layout_width="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="你有正在编辑的内容，确定退出当前界面？" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/dialog_cancel_btn_id"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:background="@drawable/shape_dialog_left_btn_bg"
+                android:text="取消" />
+
+            <Button
+                android:id="@+id/dialog_ok_btn_id"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:background="@drawable/shape_dialog_right_btn_bg"
+                android:text="确定" />
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

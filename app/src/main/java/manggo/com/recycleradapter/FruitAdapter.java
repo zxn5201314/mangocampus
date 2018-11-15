@@ -35,6 +35,7 @@ import manggo.com.activity.IssueActvity;
 import manggo.com.activity.MainActivity;
 import manggo.com.query.Page;
 import manggo.com.query.ResponseResult;
+import manggo.com.util.DateUtils;
 import manggo.com.util.OnGlobalLayoutListenerByEllipSize;
 import manggo.com.view.RoundImageView;
 import okhttp3.FormBody;
@@ -102,14 +103,10 @@ public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder> 
                  * 此处进行事件传递处理,并且带有数据,带评论的数据
                  */
                 //获得标题，内容，图片地址
-                //使用Bundle携带数据,携带评论的数据
+                //使用序列化携带数据,携带评论的数据
 
                 Intent intent=new Intent(mContext, DetailActivity.class);
-                Bundle bundle=new Bundle();
-                bundle.putCharSequence("title",fruit.getName());
-                bundle.putCharSequence("content",fruit.getContent());
-                bundle.putStringArrayList("imageList",(ArrayList) fruit.getImageList());//携带图片信息
-                intent.putExtras(bundle);
+                intent.putExtra("fruit_data",fruit);
                 mContext.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation((Activity)mContext).toBundle());
 
             }
@@ -122,14 +119,10 @@ public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder> 
                 Fruit fruit=mFruitList.get(position);
                 /**
                  * 此处进行事件传递处理
-                 * //使用Bundle携带数据,携带评论的数据
+                 * //使用序列化携带数据,携带评论的数据
                  */
                 Intent intent=new Intent(mContext, DetailActivity.class);
-                Bundle bundle=new Bundle();
-                bundle.putCharSequence("title",fruit.getName());
-                bundle.putCharSequence("content",fruit.getContent());
-                bundle.putStringArrayList("imageList",(ArrayList) fruit.getImageList());
-                intent.putExtras(bundle);
+                intent.putExtra("fruit_data",fruit);
                 mContext.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation((Activity)mContext).toBundle());
             }
         });
@@ -138,15 +131,14 @@ public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder> 
     }
     //将在此方法里面进行数据处理,从网络获取数据
     @Override
-    public void onBindViewHolder(ViewHolder holder,int position){
-        Fruit fruit=mFruitList.get(position);
-        imageList=fruit.getImageList();//获得集合
+    public void onBindViewHolder(ViewHolder holder,int position) {
+        Fruit fruit = mFruitList.get(position);
+        imageList = fruit.getImageList();//获得集合
         holder.textView.setText(fruit.getName());//设置标题
-        holder.textContent.setText("\t\t\t\t"+fruit.getContent());//设置内容
-        holder.visitCount.setText(fruit.getVisitCount().substring(0,fruit.getVisitCount().indexOf(".")));
-        holder.time.setText(fruit.getTime());//设置发布时间
-        loadListToImage(imageList,holder);
-
+        holder.textContent.setText("\t\t\t\t" + fruit.getContent());//设置内容
+        holder.visitCount.setText(fruit.getVisitCount().substring(0, fruit.getVisitCount().indexOf(".")));
+        holder.time.setText(DateUtils.toDay(fruit.getTime()));//设置发布时间
+        loadListToImage(imageList, holder);
     }
 
     /**

@@ -19,8 +19,6 @@
     </style>
     <!--Dialog的风格-->
     <style name="BottomDialog" parent="@android:style/Theme.Dialog">
-        <!--设置背景为透明颜色-->
-        <item name="android:windowBackground">@android:color/white</item>
         <item name="android:windowContentOverlay">@null</item>
         <!--悬浮于在Activity上-->
         <item name="android:windowIsFloating">true</item>
@@ -32,6 +30,10 @@
         <item name="android:windowNoTitle">true</item>
         <!--半透明-->
         <item name="android:windowIsTranslucent">true</item>
+        <!--dialog背景-->
+        <item name="android:background">@android:color/white</item>
+        <!--window背景-->
+        <item name="android:windowBackground">@android:color/transparent</item>
         <!--进入和退出动画-->
         <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
     </style>
@@ -58,4 +60,20 @@
         <!--进入和退出动画-->
         <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
     </style>
-</resources>
+    <!--发布退出提示框-->
+    <style name="AppDialogStyle" parent="Theme.AppCompat.Dialog">
+        <!--无边框-->
+        <item name="android:windowFrame">@null</item>
+        <!--无标题-->
+        <item name="android:windowNoTitle">true</item>
+        <!--是否悬浮在activity之上-->
+        <item name="android:windowIsFloating">true</item>
+        <!--是否半透明-->
+        <item name="android:windowIsTranslucent">true</item>
+        <!--dialog背景-->
+        <item name="android:background">@android:color/transparent</item>
+        <!--window背景-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
+    </style>
+    </resources>
